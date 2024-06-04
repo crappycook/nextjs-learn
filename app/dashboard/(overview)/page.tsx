@@ -2,16 +2,16 @@
 // and it's required for the route to be accessible.
 import { Card } from "@/app/ui/dashboard/cards";
 import { lusitana } from "@/app/ui/fonts";
-import { fetchCardData, fetchLatestInvoices, fetchRevenue } from "@/app/lib/data";
+import { fetchCardData, fetchLatestInvoices } from "@/app/lib/data";
 import RevenueChart from "@/app/ui/dashboard/revenue-chart";
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
+import { Suspense } from "react";
+import { LatestInvoicesSkeleton, RevenueChartSkeleton } from "@/app/ui/skeletons";
 
 // `/app/dashboard/page.tsx` is associated with the `/dashboard` path
 // This is how you can create different pages in Next.js: 
 // create a new route segment using a folder, and add a page file inside it.
 export default async function Page() {
-    const revenue = await fetchRevenue();
-    const latestInvoices = await fetchLatestInvoices();
     const { totalPaidInvoices, totalPendingInvoices, numberOfInvoices, numberOfCustomers } = await fetchCardData();
 
     return (
@@ -30,8 +30,12 @@ export default async function Page() {
                 />
             </div>
             <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-                <RevenueChart revenue={revenue} />
-                <LatestInvoices latestInvoices={latestInvoices} />
+                <Suspense fallback={<RevenueChartSkeleton />}>
+                    <RevenueChart />
+                </Suspense>
+                <Suspense fallback={<LatestInvoicesSkeleton />}>
+                    <LatestInvoices />
+                </Suspense>
             </div>
         </main>
     );
