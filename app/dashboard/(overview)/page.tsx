@@ -23,6 +23,7 @@ export default async function Page() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        {/* Suspense is used as a boundary between the static and dynamic parts of your route. */}
         <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChart />
         </Suspense>
