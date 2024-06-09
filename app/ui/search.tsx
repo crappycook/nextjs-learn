@@ -2,6 +2,7 @@
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search({ placeholder }: { placeholder: string }) {
   const searchParams = useSearchParams();
@@ -10,7 +11,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
   console.log(searchParams.toString());
 
-  function handleSearch(term: string) {
+  // This function will wrap the contents of `handleSearch`, 
+  // and only run the code after a specific time once the user has stopped typing (300ms)
+  const handleSearch = useDebouncedCallback((term: string) => {
     // Client component: print log in Developer Tools.
     // console.log(term);
 
@@ -28,7 +31,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     // Use `replace` method to update the URL without reloading the page.
     const pathNameAfterSearch = pathname + '?' + params.toString();
     replace(pathNameAfterSearch);
-  }
+  }, 300);
 
   return (
     <div className="relative flex flex-1 flex-shrink-0">
