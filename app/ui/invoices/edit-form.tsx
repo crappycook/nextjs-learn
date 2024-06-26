@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { updateInvoice } from '@/app/lib/action';
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,8 +18,13 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  // you can pass id to the Server Action using JS `bind`
+  // This will ensure that any values passed to the Server Action are encoded.
+  // 这种方法的用途是在调用updateInvoiceWithId函数时，可以方便地传递invoice.id作为参数，而不需要手动将invoice.id与updates一起传递。
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
   return (
-    <form>
+    <form action={updateInvoiceWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
